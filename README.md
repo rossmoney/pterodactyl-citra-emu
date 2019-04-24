@@ -12,7 +12,7 @@ sudo docker run -d \
   --preferred-game-id "TITLE ID" \
   --port 5000 \
   --max_members 4 \
-  --username "CITRA ACCOUNT USERNAME"
+  --username "CITRA ACCOUNT USERNAME" \
   --token "CITRA ACCOUNT TOKEN" \
   --enable-citra-mods \
   --web-api-url https://api.citra-emu.org/
