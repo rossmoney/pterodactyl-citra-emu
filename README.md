@@ -12,11 +12,14 @@ sudo docker run -d \
   --preferred-game-id "TITLE ID" \
   --port 5000 \
   --max_members 4 \
-  --username "CITRA ACCOUNT USERNAME" \
   --token "CITRA ACCOUNT TOKEN" \
   --enable-citra-mods \
   --web-api-url https://api.citra-emu.org/
 ```
+
+**Please note, the token format has changed as of 11/1/2019.**
+
+**You can retrieve your token from https://profile.citra-emu.org/**
 
 Room name should follow the below format.
 If multiple servers are stood up, `Server 1`, `Server 2` format should be used.
