@@ -5,7 +5,7 @@ Quickly stand up new dedicated multiplayer lobbies that will be broadcasted on C
 ## Usage
 ```
 sudo docker run -d \
-  --publish 5000:5000/udp
+  --publish 5000:5000/udp \
   citraemu/citra-multiplayer-dedicated \
   --room-name "(COUNTRY) (REGION) - GAME TITLE" \
   --preferred-game "GAME TITLE" \
