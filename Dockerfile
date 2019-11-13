@@ -1,8 +1,4 @@
-FROM ubuntu:18.04
-
-# Fixes libcurl.so.4 dependency issue.
-RUN apt-get update && apt-get install -y \
-    wget libcurl4-openssl-dev libsdl2-dev
+FROM citraemu/build-environments:linux-fresh
 
 # Create app directory
 WORKDIR /usr/src/app
