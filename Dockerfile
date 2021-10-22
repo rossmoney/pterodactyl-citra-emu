@@ -1,11 +1,17 @@
-FROM citraemu/build-environments:linux-fresh
+FROM debian:bullseye AS build
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get -y full-upgrade && \
+    apt-get install -y build-essential libsdl2-dev wget git ccache cmake ninja-build
 
+COPY . /root/build-files
+
+RUN git clone --recursive https://github.com/citra-emu/citra-canary.git /root/citra-canary && \
+    cd /root/citra-canary && /root/build-files/.ci/build.sh
+
+FROM debian:bullseye-slim AS final
+LABEL maintainer="citraemu"
 # Create app directory
 WORKDIR /usr/src/app
-
-# Download the Citra binary.
-# Bundle citra-room inside the image and delete the downloaded tar file.
-RUN wget -O citra-linux.tar.xz https://github.com/citra-emu/citra-canary/releases/download/canary-1641/citra-linux-20200413-e9f68ae.tar.xz && \
-    tar --wildcards --strip=1 -xJf citra-linux.tar.xz */citra-room && rm citra-linux.tar.xz
+COPY --from=build /root/citra-canary/build/bin/Release/citra-room /usr/src/app
 
 ENTRYPOINT [ "/usr/src/app/citra-room" ]
