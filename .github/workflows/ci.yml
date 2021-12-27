@@ -36,3 +36,5 @@ jobs:
           platforms: linux/${{ matrix.arch }}
           push: ${{ (github.ref == 'refs/heads/master') && (github.repository == 'citra-emu/citra-multiplayer-dedicated') }}
           tags: citraemu/citra-multiplayer-dedicated:latest
+          cache-from: type=gha,scope=buildkit-${{ matrix.arch }}
+          cache-to: type=gha,mode=max,scope=buildkit-${{ matrix.arch }}
