@@ -7,7 +7,11 @@ for i in "$TOPDIR"/../patches/*.patch; do
     patch -Np1 -i "$i"
 done
 
-export CFLAGS="-ftree-vectorize -flto"
+CFLAGS="-ftree-vectorize -flto"
+if [[ "$(uname -m)" == "aarch64" ]]; then
+    CFLAGS="$CFLAGS -march=armv8-a+crc+crypto"
+fi
+export CFLAGS
 export CXXFLAGS="$CFLAGS"
 export LDFLAGS="-flto -fuse-linker-plugin"
 
