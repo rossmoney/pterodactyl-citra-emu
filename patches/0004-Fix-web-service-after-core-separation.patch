@@ -1,0 +1,33 @@
+From 7e8299b9f50005b9fdab3da28f67db11090f7428 Mon Sep 17 00:00:00 2001
+From: liushuyu <liushuyu011@gmail.com>
+Date: Fri, 20 Aug 2021 05:46:35 -0600
+Subject: [PATCH 4/4] Fix web service after core separation
+
+---
+ src/network/CMakeLists.txt | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/src/network/CMakeLists.txt b/src/network/CMakeLists.txt
+index 1a9dfe836..60dbebc90 100644
+--- a/src/network/CMakeLists.txt
++++ b/src/network/CMakeLists.txt
+@@ -17,4 +17,16 @@ add_library(network STATIC
+ 
+ create_target_directory_groups(network)
+ 
++if (ENABLE_WEB_SERVICE)
++    get_directory_property(OPENSSL_LIBS
++        DIRECTORY ${PROJECT_SOURCE_DIR}/externals/libressl
++        DEFINITION OPENSSL_LIBS)
++
++    target_compile_definitions(network PRIVATE -DENABLE_WEB_SERVICE -DCPPHTTPLIB_OPENSSL_SUPPORT)
++    target_link_libraries(network PRIVATE web_service ${OPENSSL_LIBS} httplib lurlparser)
++    if (ANDROID)
++        target_link_libraries(network PRIVATE ifaddrs)
++    endif()
++endif()
++
+ target_link_libraries(network PRIVATE common enet Boost::serialization)
+-- 
+2.34.1
+

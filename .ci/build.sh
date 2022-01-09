@@ -2,10 +2,9 @@
 
 TOPDIR="$(dirname "$0")"
 
-for i in "$TOPDIR"/../patches/*.patch; do
-    echo "Applying $i ..."
-    patch -Np1 -i "$i"
-done
+git config user.name "github-actions"
+git config user.email "github-actions[bot]@users.noreply.github.com"
+git am "$TOPDIR"/../patches/*.patch
 
 CFLAGS="-ftree-vectorize -flto"
 if [[ "$(uname -m)" == "aarch64" ]]; then

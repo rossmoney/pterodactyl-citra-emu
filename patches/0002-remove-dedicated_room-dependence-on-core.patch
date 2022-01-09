@@ -1,0 +1,312 @@
+From f10ca60ab74ae8be4d60d3a7808b02aef03b26d0 Mon Sep 17 00:00:00 2001
+From: Vitor Kiguchi <vitor-kiguchi@hotmail.com>
+Date: Thu, 20 Aug 2020 16:54:01 -0300
+Subject: [PATCH 2/4] remove dedicated_room dependence on core
+
+---
+ src/citra_qt/multiplayer/chat_room.cpp                 | 2 +-
+ src/citra_qt/multiplayer/chat_room.h                   | 2 +-
+ src/citra_qt/multiplayer/client_room.cpp               | 2 +-
+ src/citra_qt/multiplayer/host_room.cpp                 | 4 ++--
+ src/citra_qt/multiplayer/host_room.h                   | 6 +++---
+ src/citra_qt/multiplayer/lobby.cpp                     | 2 +-
+ src/citra_qt/multiplayer/lobby.h                       | 6 +++---
+ src/citra_qt/multiplayer/state.cpp                     | 2 +-
+ src/citra_qt/multiplayer/state.h                       | 4 ++--
+ src/core/CMakeLists.txt                                | 2 --
+ src/dedicated_room/CMakeLists.txt                      | 4 ++--
+ src/dedicated_room/citra-room.cpp                      | 4 ++--
+ src/network/CMakeLists.txt                             | 2 ++
+ src/{core => network}/announce_multiplayer_session.cpp | 4 ++--
+ src/{core => network}/announce_multiplayer_session.h   | 6 ++----
+ 15 files changed, 25 insertions(+), 27 deletions(-)
+ rename src/{core => network}/announce_multiplayer_session.cpp (99%)
+ rename src/{core => network}/announce_multiplayer_session.h (98%)
+
+diff --git a/src/citra_qt/multiplayer/chat_room.cpp b/src/citra_qt/multiplayer/chat_room.cpp
+index 440736978..6b303bc1e 100644
+--- a/src/citra_qt/multiplayer/chat_room.cpp
++++ b/src/citra_qt/multiplayer/chat_room.cpp
+@@ -20,7 +20,7 @@
+ #include "citra_qt/multiplayer/chat_room.h"
+ #include "citra_qt/multiplayer/message.h"
+ #include "common/logging/log.h"
+-#include "core/announce_multiplayer_session.h"
++#include "network/announce_multiplayer_session.h"
+ #include "ui_chat_room.h"
+ #ifdef ENABLE_WEB_SERVICE
+ #include "web_service/web_backend.h"
+diff --git a/src/citra_qt/multiplayer/chat_room.h b/src/citra_qt/multiplayer/chat_room.h
+index a810377f7..d73f7cf73 100644
+--- a/src/citra_qt/multiplayer/chat_room.h
++++ b/src/citra_qt/multiplayer/chat_room.h
+@@ -16,7 +16,7 @@ namespace Ui {
+ class ChatRoom;
+ }
+ 
+-namespace Core {
++namespace Network {
+ class AnnounceMultiplayerSession;
+ }
+ 
+diff --git a/src/citra_qt/multiplayer/client_room.cpp b/src/citra_qt/multiplayer/client_room.cpp
+index 9ef59c1e0..312090cbe 100644
+--- a/src/citra_qt/multiplayer/client_room.cpp
++++ b/src/citra_qt/multiplayer/client_room.cpp
+@@ -16,7 +16,7 @@
+ #include "citra_qt/multiplayer/moderation_dialog.h"
+ #include "citra_qt/multiplayer/state.h"
+ #include "common/logging/log.h"
+-#include "core/announce_multiplayer_session.h"
++#include "network/announce_multiplayer_session.h"
+ #include "ui_client_room.h"
+ 
+ ClientRoomWindow::ClientRoomWindow(QWidget* parent)
+diff --git a/src/citra_qt/multiplayer/host_room.cpp b/src/citra_qt/multiplayer/host_room.cpp
+index b2905c7db..498ce943b 100644
+--- a/src/citra_qt/multiplayer/host_room.cpp
++++ b/src/citra_qt/multiplayer/host_room.cpp
+@@ -19,8 +19,8 @@
+ #include "citra_qt/multiplayer/validation.h"
+ #include "citra_qt/uisettings.h"
+ #include "common/logging/log.h"
+-#include "core/announce_multiplayer_session.h"
+ #include "core/hle/service/cfg/cfg.h"
++#include "network/announce_multiplayer_session.h"
+ #include "network/network_settings.h"
+ #include "ui_host_room.h"
+ #ifdef ENABLE_WEB_SERVICE
+@@ -28,7 +28,7 @@
+ #endif
+ 
+ HostRoomWindow::HostRoomWindow(QWidget* parent, QStandardItemModel* list,
+-                               std::shared_ptr<Core::AnnounceMultiplayerSession> session)
++                               std::shared_ptr<Network::AnnounceMultiplayerSession> session)
+     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowCloseButtonHint | Qt::WindowSystemMenuHint),
+       ui(std::make_unique<Ui::HostRoom>()), announce_multiplayer_session(session) {
+     ui->setupUi(this);
+diff --git a/src/citra_qt/multiplayer/host_room.h b/src/citra_qt/multiplayer/host_room.h
+index 69a36b881..b6f84f078 100644
+--- a/src/citra_qt/multiplayer/host_room.h
++++ b/src/citra_qt/multiplayer/host_room.h
+@@ -17,7 +17,7 @@ namespace Ui {
+ class HostRoom;
+ }
+ 
+-namespace Core {
++namespace Network {
+ class AnnounceMultiplayerSession;
+ }
+ 
+@@ -35,7 +35,7 @@ class HostRoomWindow : public QDialog {
+ 
+ public:
+     explicit HostRoomWindow(QWidget* parent, QStandardItemModel* list,
+-                            std::shared_ptr<Core::AnnounceMultiplayerSession> session);
++                            std::shared_ptr<Network::AnnounceMultiplayerSession> session);
+     ~HostRoomWindow();
+ 
+     /**
+@@ -50,7 +50,7 @@ private:
+     std::unique_ptr<Network::VerifyUser::Backend> CreateVerifyBackend(bool use_validation) const;
+ 
+     std::unique_ptr<Ui::HostRoom> ui;
+-    std::weak_ptr<Core::AnnounceMultiplayerSession> announce_multiplayer_session;
++    std::weak_ptr<Network::AnnounceMultiplayerSession> announce_multiplayer_session;
+     QStandardItemModel* game_list;
+     ComboBoxProxyModel* proxy;
+     Validation validation;
+diff --git a/src/citra_qt/multiplayer/lobby.cpp b/src/citra_qt/multiplayer/lobby.cpp
+index 40c0c1f39..e335d5f85 100644
+--- a/src/citra_qt/multiplayer/lobby.cpp
++++ b/src/citra_qt/multiplayer/lobby.cpp
+@@ -24,7 +24,7 @@
+ #endif
+ 
+ Lobby::Lobby(QWidget* parent, QStandardItemModel* list,
+-             std::shared_ptr<Core::AnnounceMultiplayerSession> session)
++             std::shared_ptr<Network::AnnounceMultiplayerSession> session)
+     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowCloseButtonHint | Qt::WindowSystemMenuHint),
+       ui(std::make_unique<Ui::Lobby>()), announce_multiplayer_session(session) {
+     ui->setupUi(this);
+diff --git a/src/citra_qt/multiplayer/lobby.h b/src/citra_qt/multiplayer/lobby.h
+index 3befb9eae..985b82ba7 100644
+--- a/src/citra_qt/multiplayer/lobby.h
++++ b/src/citra_qt/multiplayer/lobby.h
+@@ -11,7 +11,7 @@
+ #include <QStandardItemModel>
+ #include "citra_qt/multiplayer/validation.h"
+ #include "common/announce_multiplayer_room.h"
+-#include "core/announce_multiplayer_session.h"
++#include "network/announce_multiplayer_session.h"
+ #include "network/network.h"
+ 
+ namespace Ui {
+@@ -30,7 +30,7 @@ class Lobby : public QDialog {
+ 
+ public:
+     explicit Lobby(QWidget* parent, QStandardItemModel* list,
+-                   std::shared_ptr<Core::AnnounceMultiplayerSession> session);
++                   std::shared_ptr<Network::AnnounceMultiplayerSession> session);
+     ~Lobby() override;
+ 
+     /**
+@@ -91,7 +91,7 @@ private:
+     LobbyFilterProxyModel* proxy{};
+ 
+     QFutureWatcher<AnnounceMultiplayerRoom::RoomList> room_list_watcher;
+-    std::weak_ptr<Core::AnnounceMultiplayerSession> announce_multiplayer_session;
++    std::weak_ptr<Network::AnnounceMultiplayerSession> announce_multiplayer_session;
+     QFutureWatcher<void>* watcher;
+     Validation validation;
+ };
+diff --git a/src/citra_qt/multiplayer/state.cpp b/src/citra_qt/multiplayer/state.cpp
+index 28f884a12..9a8e04208 100644
+--- a/src/citra_qt/multiplayer/state.cpp
++++ b/src/citra_qt/multiplayer/state.cpp
+@@ -37,7 +37,7 @@ MultiplayerState::MultiplayerState(QWidget* parent, QStandardItemModel* game_lis
+     qRegisterMetaType<Network::RoomMember::State>();
+     qRegisterMetaType<Network::RoomMember::Error>();
+     qRegisterMetaType<Common::WebResult>();
+-    announce_multiplayer_session = std::make_shared<Core::AnnounceMultiplayerSession>();
++    announce_multiplayer_session = std::make_shared<Network::AnnounceMultiplayerSession>();
+     announce_multiplayer_session->BindErrorCallback(
+         [this](const Common::WebResult& result) { emit AnnounceFailed(result); });
+     connect(this, &MultiplayerState::AnnounceFailed, this, &MultiplayerState::OnAnnounceFailed);
+diff --git a/src/citra_qt/multiplayer/state.h b/src/citra_qt/multiplayer/state.h
+index 707efd5a4..3607d97af 100644
+--- a/src/citra_qt/multiplayer/state.h
++++ b/src/citra_qt/multiplayer/state.h
+@@ -5,7 +5,7 @@
+ #pragma once
+ 
+ #include <QWidget>
+-#include "core/announce_multiplayer_session.h"
++#include "network/announce_multiplayer_session.h"
+ #include "network/network.h"
+ 
+ class QStandardItemModel;
+@@ -80,7 +80,7 @@ private:
+     QStandardItemModel* game_list_model = nullptr;
+     QAction* leave_room;
+     QAction* show_room;
+-    std::shared_ptr<Core::AnnounceMultiplayerSession> announce_multiplayer_session;
++    std::shared_ptr<Network::AnnounceMultiplayerSession> announce_multiplayer_session;
+     Network::RoomMember::State current_state = Network::RoomMember::State::Uninitialized;
+     bool has_mod_perms = false;
+     Network::RoomMember::CallbackHandle<Network::RoomMember::State> state_callback_handle;
+diff --git a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
+index 6b98a0d28..fdafd62e3 100644
+--- a/src/core/CMakeLists.txt
++++ b/src/core/CMakeLists.txt
+@@ -1,7 +1,5 @@
+ add_library(core STATIC
+     3ds.h
+-    announce_multiplayer_session.cpp
+-    announce_multiplayer_session.h
+     arm/arm_interface.h
+     arm/dyncom/arm_dyncom.cpp
+     arm/dyncom/arm_dyncom.h
+diff --git a/src/dedicated_room/CMakeLists.txt b/src/dedicated_room/CMakeLists.txt
+index 2b91daa70..9dbb6784c 100644
+--- a/src/dedicated_room/CMakeLists.txt
++++ b/src/dedicated_room/CMakeLists.txt
+@@ -7,13 +7,13 @@ add_executable(citra-room
+ 
+ create_target_directory_groups(citra-room)
+ 
+-target_link_libraries(citra-room PRIVATE common core network)
++target_link_libraries(citra-room PRIVATE common network)
+ if (ENABLE_WEB_SERVICE)
+     target_compile_definitions(citra-room PRIVATE -DENABLE_WEB_SERVICE)
+     target_link_libraries(citra-room PRIVATE web_service)
+ endif()
+ 
+-target_link_libraries(citra-room PRIVATE cryptopp glad)
++target_link_libraries(citra-room PRIVATE cryptopp)
+ if (MSVC)
+     target_link_libraries(citra-room PRIVATE getopt)
+ endif()
+diff --git a/src/dedicated_room/citra-room.cpp b/src/dedicated_room/citra-room.cpp
+index 801249206..fe0da34c6 100644
+--- a/src/dedicated_room/citra-room.cpp
++++ b/src/dedicated_room/citra-room.cpp
+@@ -26,7 +26,7 @@
+ #include "common/logging/log.h"
+ #include "common/scm_rev.h"
+ #include "common/string_util.h"
+-#include "core/announce_multiplayer_session.h"
++#include "network/announce_multiplayer_session.h"
+ #include "network/network.h"
+ #include "network/network_settings.h"
+ #include "network/room.h"
+@@ -342,7 +342,7 @@ int main(int argc, char** argv) {
+             return -1;
+         }
+         std::cout << "Room is open. Close with Q+Enter...\n\n";
+-        auto announce_session = std::make_unique<Core::AnnounceMultiplayerSession>();
++        auto announce_session = std::make_unique<Network::AnnounceMultiplayerSession>();
+         if (announce) {
+             announce_session->Start();
+         }
+diff --git a/src/network/CMakeLists.txt b/src/network/CMakeLists.txt
+index cf920d8bc..1a9dfe836 100644
+--- a/src/network/CMakeLists.txt
++++ b/src/network/CMakeLists.txt
+@@ -1,4 +1,6 @@
+ add_library(network STATIC
++    announce_multiplayer_session.cpp
++    announce_multiplayer_session.h
+     network.cpp
+     network.h
+     network_settings.cpp
+diff --git a/src/core/announce_multiplayer_session.cpp b/src/network/announce_multiplayer_session.cpp
+similarity index 99%
+rename from src/core/announce_multiplayer_session.cpp
+rename to src/network/announce_multiplayer_session.cpp
+index 9ae373192..56c02a041 100644
+--- a/src/core/announce_multiplayer_session.cpp
++++ b/src/network/announce_multiplayer_session.cpp
+@@ -15,7 +15,7 @@
+ #include "web_service/announce_room_json.h"
+ #endif
+ 
+-namespace Core {
++namespace Network {
+ 
+ // Time between room is announced to web_service
+ static constexpr std::chrono::seconds announce_time_interval(15);
+@@ -161,4 +161,4 @@ void AnnounceMultiplayerSession::UpdateCredentials() {
+ #endif
+ }
+ 
+-} // namespace Core
++} // namespace Network
+diff --git a/src/core/announce_multiplayer_session.h b/src/network/announce_multiplayer_session.h
+similarity index 98%
+rename from src/core/announce_multiplayer_session.h
+rename to src/network/announce_multiplayer_session.h
+index 5647972d0..97fd1e5b3 100644
+--- a/src/core/announce_multiplayer_session.h
++++ b/src/network/announce_multiplayer_session.h
+@@ -15,10 +15,8 @@
+ #include "common/thread.h"
+ 
+ namespace Network {
+-class Room;
+-}
+ 
+-namespace Core {
++class Room;
+ 
+ /**
+  * Instruments AnnounceMultiplayerRoom::Backend.
+@@ -93,4 +91,4 @@ private:
+     void AnnounceMultiplayerLoop();
+ };
+ 
+-} // namespace Core
++} // namespace Network
+-- 
+2.34.1
+

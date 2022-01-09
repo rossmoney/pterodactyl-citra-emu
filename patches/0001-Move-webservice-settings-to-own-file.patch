@@ -1,7 +1,7 @@
-From 036ef599a4fa6952bb3930e0c3ddde90cbe90405 Mon Sep 17 00:00:00 2001
+From 8f0a2d3c2b03f8fc9c4d0dead498c430ea465be2 Mon Sep 17 00:00:00 2001
 From: Vitor Kiguchi <vitor-kiguchi@hotmail.com>
 Date: Thu, 20 Aug 2020 04:46:35 -0300
-Subject: [PATCH 1/2] Move webservice settings to own file
+Subject: [PATCH 1/4] Move webservice settings to own file
 
 ---
  src/citra/config.cpp                         |  9 ++++----
@@ -23,7 +23,7 @@ Subject: [PATCH 1/2] Move webservice settings to own file
  create mode 100644 src/network/network_settings.h
 
 diff --git a/src/citra/config.cpp b/src/citra/config.cpp
-index 88a36ed66ee..ff18f780cfb 100644
+index 6f747fcf5..3fa47b18f 100644
 --- a/src/citra/config.cpp
 +++ b/src/citra/config.cpp
 @@ -18,6 +18,7 @@
@@ -34,7 +34,7 @@ index 88a36ed66ee..ff18f780cfb 100644
  
  Config::Config() {
      // TODO: Don't hardcode the path; let the frontend decide where to put the config files.
-@@ -266,12 +267,12 @@ void Config::ReadValues() {
+@@ -270,12 +271,12 @@ void Config::ReadValues() {
      }
  
      // Web Service
@@ -52,7 +52,7 @@ index 88a36ed66ee..ff18f780cfb 100644
      // Video Dumping
      Settings::values.output_format =
 diff --git a/src/citra_qt/configuration/config.cpp b/src/citra_qt/configuration/config.cpp
-index 8901c47c2d8..bd6a7b5565c 100644
+index 28612bbd0..dc88444a7 100644
 --- a/src/citra_qt/configuration/config.cpp
 +++ b/src/citra_qt/configuration/config.cpp
 @@ -15,6 +15,7 @@
@@ -63,7 +63,7 @@ index 8901c47c2d8..bd6a7b5565c 100644
  
  Config::Config() {
      // TODO: Don't hardcode the path; let the frontend decide where to put the config files.
-@@ -686,15 +687,15 @@ void Config::ReadUpdaterValues() {
+@@ -696,15 +697,15 @@ void Config::ReadUpdaterValues() {
  void Config::ReadWebServiceValues() {
      qt_config->beginGroup(QStringLiteral("WebService"));
  
@@ -83,7 +83,7 @@ index 8901c47c2d8..bd6a7b5565c 100644
          ReadSetting(QStringLiteral("citra_token")).toString().toStdString();
  
      qt_config->endGroup();
-@@ -1138,14 +1139,14 @@ void Config::SaveUpdaterValues() {
+@@ -1154,14 +1155,14 @@ void Config::SaveUpdaterValues() {
  void Config::SaveWebServiceValues() {
      qt_config->beginGroup(QStringLiteral("WebService"));
  
@@ -103,7 +103,7 @@ index 8901c47c2d8..bd6a7b5565c 100644
      qt_config->endGroup();
  }
 diff --git a/src/citra_qt/configuration/configure_web.cpp b/src/citra_qt/configuration/configure_web.cpp
-index cc7ca675f1d..e97a227205a 100644
+index cc7ca675f..e97a22720 100644
 --- a/src/citra_qt/configuration/configure_web.cpp
 +++ b/src/citra_qt/configuration/configure_web.cpp
 @@ -7,8 +7,8 @@
@@ -155,7 +155,7 @@ index cc7ca675f1d..e97a227205a 100644
          QMessageBox::warning(
              this, tr("Token not verified"),
 diff --git a/src/citra_qt/main.cpp b/src/citra_qt/main.cpp
-index a804bfb985d..af3925bbc7f 100644
+index f4ae1cb98..c4a0e8e53 100644
 --- a/src/citra_qt/main.cpp
 +++ b/src/citra_qt/main.cpp
 @@ -83,6 +83,7 @@
@@ -175,7 +175,7 @@ index a804bfb985d..af3925bbc7f 100644
          Settings::Apply();
      }
  }
-@@ -1578,7 +1579,7 @@ void GMainWindow::OnLoadComplete() {
+@@ -1595,7 +1596,7 @@ void GMainWindow::OnLoadComplete() {
  }
  
  void GMainWindow::OnMenuReportCompatibility() {
@@ -185,7 +185,7 @@ index a804bfb985d..af3925bbc7f 100644
          compatdb.exec();
      } else {
 diff --git a/src/citra_qt/multiplayer/direct_connect.cpp b/src/citra_qt/multiplayer/direct_connect.cpp
-index 2ce935f23e2..feaea69c945 100644
+index 2ce935f23..feaea69c9 100644
 --- a/src/citra_qt/multiplayer/direct_connect.cpp
 +++ b/src/citra_qt/multiplayer/direct_connect.cpp
 @@ -16,8 +16,8 @@
@@ -219,7 +219,7 @@ index 2ce935f23e2..feaea69c945 100644
      // attempt to connect in a different thread
      QFuture<void> f = QtConcurrent::run([&] {
 diff --git a/src/citra_qt/multiplayer/host_room.cpp b/src/citra_qt/multiplayer/host_room.cpp
-index 49eb5480d9b..b2905c7db51 100644
+index 49eb5480d..b2905c7db 100644
 --- a/src/citra_qt/multiplayer/host_room.cpp
 +++ b/src/citra_qt/multiplayer/host_room.cpp
 @@ -21,7 +21,7 @@
@@ -283,7 +283,7 @@ index 49eb5480d9b..b2905c7db51 100644
          close();
      }
 diff --git a/src/citra_qt/multiplayer/lobby.cpp b/src/citra_qt/multiplayer/lobby.cpp
-index d4d946da57e..40c0c1f398a 100644
+index d4d946da5..40c0c1f39 100644
 --- a/src/citra_qt/multiplayer/lobby.cpp
 +++ b/src/citra_qt/multiplayer/lobby.cpp
 @@ -16,8 +16,8 @@
@@ -332,7 +332,7 @@ index d4d946da57e..40c0c1f398a 100644
  
  void Lobby::ResetModel() {
 diff --git a/src/core/announce_multiplayer_session.cpp b/src/core/announce_multiplayer_session.cpp
-index 38acb4bacdc..9ae373192a3 100644
+index 38acb4bac..9ae373192 100644
 --- a/src/core/announce_multiplayer_session.cpp
 +++ b/src/core/announce_multiplayer_session.cpp
 @@ -8,8 +8,8 @@
@@ -372,10 +372,10 @@ index 38acb4bacdc..9ae373192a3 100644
  }
  
 diff --git a/src/core/settings.h b/src/core/settings.h
-index 0876d312f56..b0101ede26d 100644
+index 6030c0868..9aaac24f3 100644
 --- a/src/core/settings.h
 +++ b/src/core/settings.h
-@@ -211,12 +211,6 @@ struct Values {
+@@ -232,12 +232,6 @@ struct Values {
      std::string log_filter;
      std::unordered_map<std::string, bool> lle_modules;
  
@@ -389,10 +389,10 @@ index 0876d312f56..b0101ede26d 100644
      std::string output_format;
      std::string format_options;
 diff --git a/src/core/telemetry_session.cpp b/src/core/telemetry_session.cpp
-index 6189e84eeff..5b27fa6cf22 100644
+index 13c58e2f7..c9f7c6841 100644
 --- a/src/core/telemetry_session.cpp
 +++ b/src/core/telemetry_session.cpp
-@@ -15,6 +15,7 @@
+@@ -12,6 +12,7 @@
  #include "core/core.h"
  #include "core/settings.h"
  #include "core/telemetry_session.h"
@@ -400,7 +400,7 @@ index 6189e84eeff..5b27fa6cf22 100644
  
  #ifdef ENABLE_WEB_SERVICE
  #include "web_service/telemetry_json.h"
-@@ -71,7 +72,7 @@ u64 RegenerateTelemetryId() {
+@@ -70,7 +71,7 @@ u64 RegenerateTelemetryId() {
  
  bool VerifyLogin(const std::string& username, const std::string& token) {
  #ifdef ENABLE_WEB_SERVICE
@@ -409,7 +409,7 @@ index 6189e84eeff..5b27fa6cf22 100644
  #else
      return false;
  #endif
-@@ -87,16 +88,16 @@ TelemetrySession::~TelemetrySession() {
+@@ -86,16 +87,16 @@ TelemetrySession::~TelemetrySession() {
      AddField(Telemetry::FieldType::Session, "Shutdown_Time", shutdown_time);
  
  #ifdef ENABLE_WEB_SERVICE
@@ -430,7 +430,7 @@ index 6189e84eeff..5b27fa6cf22 100644
          backend->Complete();
      }
  }
-@@ -190,9 +191,9 @@ void TelemetrySession::AddInitialInfo(Loader::AppLoader& app_loader) {
+@@ -154,9 +155,9 @@ void TelemetrySession::AddInitialInfo(Loader::AppLoader& app_loader) {
  
  bool TelemetrySession::SubmitTestcase() {
  #ifdef ENABLE_WEB_SERVICE
@@ -444,7 +444,7 @@ index 6189e84eeff..5b27fa6cf22 100644
      return backend->SubmitTestcase();
  #else
 diff --git a/src/dedicated_room/citra-room.cpp b/src/dedicated_room/citra-room.cpp
-index a498b13c2fd..801249206a8 100644
+index a498b13c2..801249206 100644
 --- a/src/dedicated_room/citra-room.cpp
 +++ b/src/dedicated_room/citra-room.cpp
 @@ -10,7 +10,6 @@
@@ -510,7 +510,7 @@ index a498b13c2fd..801249206a8 100644
          std::cout
              << "Citra Web Services is not available with this build: validation is disabled.\n\n";
 diff --git a/src/network/CMakeLists.txt b/src/network/CMakeLists.txt
-index 1e0eb4bc9b2..cf920d8bc4e 100644
+index 1e0eb4bc9..cf920d8bc 100644
 --- a/src/network/CMakeLists.txt
 +++ b/src/network/CMakeLists.txt
 @@ -1,6 +1,8 @@
@@ -524,7 +524,7 @@ index 1e0eb4bc9b2..cf920d8bc4e 100644
      room.cpp
 diff --git a/src/network/network_settings.cpp b/src/network/network_settings.cpp
 new file mode 100644
-index 00000000000..62aefcc0454
+index 000000000..62aefcc04
 --- /dev/null
 +++ b/src/network/network_settings.cpp
 @@ -0,0 +1,11 @@
@@ -541,7 +541,7 @@ index 00000000000..62aefcc0454
 +}
 diff --git a/src/network/network_settings.h b/src/network/network_settings.h
 new file mode 100644
-index 00000000000..eed1d56b4a9
+index 000000000..eed1d56b4
 --- /dev/null
 +++ b/src/network/network_settings.h
 @@ -0,0 +1,20 @@
@@ -565,313 +565,6 @@ index 00000000000..eed1d56b4a9
 +} extern values;
 +
 +} // namespace NetSettings
+-- 
+2.34.1
 
-From 2fb9de92a06857b627f15fe6a1824f33c1525b57 Mon Sep 17 00:00:00 2001
-From: Vitor Kiguchi <vitor-kiguchi@hotmail.com>
-Date: Thu, 20 Aug 2020 16:54:01 -0300
-Subject: [PATCH 2/2] remove dedicated_room dependence on core
-
----
- src/citra_qt/multiplayer/chat_room.cpp                 | 2 +-
- src/citra_qt/multiplayer/chat_room.h                   | 2 +-
- src/citra_qt/multiplayer/client_room.cpp               | 2 +-
- src/citra_qt/multiplayer/host_room.cpp                 | 4 ++--
- src/citra_qt/multiplayer/host_room.h                   | 6 +++---
- src/citra_qt/multiplayer/lobby.cpp                     | 2 +-
- src/citra_qt/multiplayer/lobby.h                       | 6 +++---
- src/citra_qt/multiplayer/state.cpp                     | 2 +-
- src/citra_qt/multiplayer/state.h                       | 4 ++--
- src/core/CMakeLists.txt                                | 2 --
- src/dedicated_room/CMakeLists.txt                      | 4 ++--
- src/dedicated_room/citra-room.cpp                      | 4 ++--
- src/network/CMakeLists.txt                             | 2 ++
- src/{core => network}/announce_multiplayer_session.cpp | 4 ++--
- src/{core => network}/announce_multiplayer_session.h   | 6 ++----
- 15 files changed, 25 insertions(+), 27 deletions(-)
- rename src/{core => network}/announce_multiplayer_session.cpp (99%)
- rename src/{core => network}/announce_multiplayer_session.h (98%)
-
-diff --git a/src/citra_qt/multiplayer/chat_room.cpp b/src/citra_qt/multiplayer/chat_room.cpp
-index 44073697841..6b303bc1e25 100644
---- a/src/citra_qt/multiplayer/chat_room.cpp
-+++ b/src/citra_qt/multiplayer/chat_room.cpp
-@@ -20,7 +20,7 @@
- #include "citra_qt/multiplayer/chat_room.h"
- #include "citra_qt/multiplayer/message.h"
- #include "common/logging/log.h"
--#include "core/announce_multiplayer_session.h"
-+#include "network/announce_multiplayer_session.h"
- #include "ui_chat_room.h"
- #ifdef ENABLE_WEB_SERVICE
- #include "web_service/web_backend.h"
-diff --git a/src/citra_qt/multiplayer/chat_room.h b/src/citra_qt/multiplayer/chat_room.h
-index a810377f7af..d73f7cf73df 100644
---- a/src/citra_qt/multiplayer/chat_room.h
-+++ b/src/citra_qt/multiplayer/chat_room.h
-@@ -16,7 +16,7 @@ namespace Ui {
- class ChatRoom;
- }
- 
--namespace Core {
-+namespace Network {
- class AnnounceMultiplayerSession;
- }
- 
-diff --git a/src/citra_qt/multiplayer/client_room.cpp b/src/citra_qt/multiplayer/client_room.cpp
-index 9ef59c1e008..312090cbe01 100644
---- a/src/citra_qt/multiplayer/client_room.cpp
-+++ b/src/citra_qt/multiplayer/client_room.cpp
-@@ -16,7 +16,7 @@
- #include "citra_qt/multiplayer/moderation_dialog.h"
- #include "citra_qt/multiplayer/state.h"
- #include "common/logging/log.h"
--#include "core/announce_multiplayer_session.h"
-+#include "network/announce_multiplayer_session.h"
- #include "ui_client_room.h"
- 
- ClientRoomWindow::ClientRoomWindow(QWidget* parent)
-diff --git a/src/citra_qt/multiplayer/host_room.cpp b/src/citra_qt/multiplayer/host_room.cpp
-index b2905c7db51..498ce943b76 100644
---- a/src/citra_qt/multiplayer/host_room.cpp
-+++ b/src/citra_qt/multiplayer/host_room.cpp
-@@ -19,8 +19,8 @@
- #include "citra_qt/multiplayer/validation.h"
- #include "citra_qt/uisettings.h"
- #include "common/logging/log.h"
--#include "core/announce_multiplayer_session.h"
- #include "core/hle/service/cfg/cfg.h"
-+#include "network/announce_multiplayer_session.h"
- #include "network/network_settings.h"
- #include "ui_host_room.h"
- #ifdef ENABLE_WEB_SERVICE
-@@ -28,7 +28,7 @@
- #endif
- 
- HostRoomWindow::HostRoomWindow(QWidget* parent, QStandardItemModel* list,
--                               std::shared_ptr<Core::AnnounceMultiplayerSession> session)
-+                               std::shared_ptr<Network::AnnounceMultiplayerSession> session)
-     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowCloseButtonHint | Qt::WindowSystemMenuHint),
-       ui(std::make_unique<Ui::HostRoom>()), announce_multiplayer_session(session) {
-     ui->setupUi(this);
-diff --git a/src/citra_qt/multiplayer/host_room.h b/src/citra_qt/multiplayer/host_room.h
-index 69a36b881e8..b6f84f078b6 100644
---- a/src/citra_qt/multiplayer/host_room.h
-+++ b/src/citra_qt/multiplayer/host_room.h
-@@ -17,7 +17,7 @@ namespace Ui {
- class HostRoom;
- }
- 
--namespace Core {
-+namespace Network {
- class AnnounceMultiplayerSession;
- }
- 
-@@ -35,7 +35,7 @@ class HostRoomWindow : public QDialog {
- 
- public:
-     explicit HostRoomWindow(QWidget* parent, QStandardItemModel* list,
--                            std::shared_ptr<Core::AnnounceMultiplayerSession> session);
-+                            std::shared_ptr<Network::AnnounceMultiplayerSession> session);
-     ~HostRoomWindow();
- 
-     /**
-@@ -50,7 +50,7 @@ class HostRoomWindow : public QDialog {
-     std::unique_ptr<Network::VerifyUser::Backend> CreateVerifyBackend(bool use_validation) const;
- 
-     std::unique_ptr<Ui::HostRoom> ui;
--    std::weak_ptr<Core::AnnounceMultiplayerSession> announce_multiplayer_session;
-+    std::weak_ptr<Network::AnnounceMultiplayerSession> announce_multiplayer_session;
-     QStandardItemModel* game_list;
-     ComboBoxProxyModel* proxy;
-     Validation validation;
-diff --git a/src/citra_qt/multiplayer/lobby.cpp b/src/citra_qt/multiplayer/lobby.cpp
-index 40c0c1f398a..e335d5f851d 100644
---- a/src/citra_qt/multiplayer/lobby.cpp
-+++ b/src/citra_qt/multiplayer/lobby.cpp
-@@ -24,7 +24,7 @@
- #endif
- 
- Lobby::Lobby(QWidget* parent, QStandardItemModel* list,
--             std::shared_ptr<Core::AnnounceMultiplayerSession> session)
-+             std::shared_ptr<Network::AnnounceMultiplayerSession> session)
-     : QDialog(parent, Qt::WindowTitleHint | Qt::WindowCloseButtonHint | Qt::WindowSystemMenuHint),
-       ui(std::make_unique<Ui::Lobby>()), announce_multiplayer_session(session) {
-     ui->setupUi(this);
-diff --git a/src/citra_qt/multiplayer/lobby.h b/src/citra_qt/multiplayer/lobby.h
-index 3befb9eae3c..985b82ba714 100644
---- a/src/citra_qt/multiplayer/lobby.h
-+++ b/src/citra_qt/multiplayer/lobby.h
-@@ -11,7 +11,7 @@
- #include <QStandardItemModel>
- #include "citra_qt/multiplayer/validation.h"
- #include "common/announce_multiplayer_room.h"
--#include "core/announce_multiplayer_session.h"
-+#include "network/announce_multiplayer_session.h"
- #include "network/network.h"
- 
- namespace Ui {
-@@ -30,7 +30,7 @@ class Lobby : public QDialog {
- 
- public:
-     explicit Lobby(QWidget* parent, QStandardItemModel* list,
--                   std::shared_ptr<Core::AnnounceMultiplayerSession> session);
-+                   std::shared_ptr<Network::AnnounceMultiplayerSession> session);
-     ~Lobby() override;
- 
-     /**
-@@ -91,7 +91,7 @@ private slots:
-     LobbyFilterProxyModel* proxy{};
- 
-     QFutureWatcher<AnnounceMultiplayerRoom::RoomList> room_list_watcher;
--    std::weak_ptr<Core::AnnounceMultiplayerSession> announce_multiplayer_session;
-+    std::weak_ptr<Network::AnnounceMultiplayerSession> announce_multiplayer_session;
-     QFutureWatcher<void>* watcher;
-     Validation validation;
- };
-diff --git a/src/citra_qt/multiplayer/state.cpp b/src/citra_qt/multiplayer/state.cpp
-index 6fa6d18095b..9484a3eba17 100644
---- a/src/citra_qt/multiplayer/state.cpp
-+++ b/src/citra_qt/multiplayer/state.cpp
-@@ -37,7 +37,7 @@ MultiplayerState::MultiplayerState(QWidget* parent, QStandardItemModel* game_lis
-     qRegisterMetaType<Network::RoomMember::State>();
-     qRegisterMetaType<Network::RoomMember::Error>();
-     qRegisterMetaType<Common::WebResult>();
--    announce_multiplayer_session = std::make_shared<Core::AnnounceMultiplayerSession>();
-+    announce_multiplayer_session = std::make_shared<Network::AnnounceMultiplayerSession>();
-     announce_multiplayer_session->BindErrorCallback(
-         [this](const Common::WebResult& result) { emit AnnounceFailed(result); });
-     connect(this, &MultiplayerState::AnnounceFailed, this, &MultiplayerState::OnAnnounceFailed);
-diff --git a/src/citra_qt/multiplayer/state.h b/src/citra_qt/multiplayer/state.h
-index 707efd5a448..3607d97af72 100644
---- a/src/citra_qt/multiplayer/state.h
-+++ b/src/citra_qt/multiplayer/state.h
-@@ -5,7 +5,7 @@
- #pragma once
- 
- #include <QWidget>
--#include "core/announce_multiplayer_session.h"
-+#include "network/announce_multiplayer_session.h"
- #include "network/network.h"
- 
- class QStandardItemModel;
-@@ -80,7 +80,7 @@ public slots:
-     QStandardItemModel* game_list_model = nullptr;
-     QAction* leave_room;
-     QAction* show_room;
--    std::shared_ptr<Core::AnnounceMultiplayerSession> announce_multiplayer_session;
-+    std::shared_ptr<Network::AnnounceMultiplayerSession> announce_multiplayer_session;
-     Network::RoomMember::State current_state = Network::RoomMember::State::Uninitialized;
-     bool has_mod_perms = false;
-     Network::RoomMember::CallbackHandle<Network::RoomMember::State> state_callback_handle;
-diff --git a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
-index 133a33ef2c9..03638659029 100644
---- a/src/core/CMakeLists.txt
-+++ b/src/core/CMakeLists.txt
-@@ -1,7 +1,5 @@
- add_library(core STATIC
-     3ds.h
--    announce_multiplayer_session.cpp
--    announce_multiplayer_session.h
-     arm/arm_interface.h
-     arm/dyncom/arm_dyncom.cpp
-     arm/dyncom/arm_dyncom.h
-diff --git a/src/dedicated_room/CMakeLists.txt b/src/dedicated_room/CMakeLists.txt
-index 2b91daa705f..9dbb6784caa 100644
---- a/src/dedicated_room/CMakeLists.txt
-+++ b/src/dedicated_room/CMakeLists.txt
-@@ -7,13 +7,13 @@ add_executable(citra-room
- 
- create_target_directory_groups(citra-room)
- 
--target_link_libraries(citra-room PRIVATE common core network)
-+target_link_libraries(citra-room PRIVATE common network)
- if (ENABLE_WEB_SERVICE)
-     target_compile_definitions(citra-room PRIVATE -DENABLE_WEB_SERVICE)
-     target_link_libraries(citra-room PRIVATE web_service)
- endif()
- 
--target_link_libraries(citra-room PRIVATE cryptopp glad)
-+target_link_libraries(citra-room PRIVATE cryptopp)
- if (MSVC)
-     target_link_libraries(citra-room PRIVATE getopt)
- endif()
-diff --git a/src/dedicated_room/citra-room.cpp b/src/dedicated_room/citra-room.cpp
-index 801249206a8..fe0da34c6d2 100644
---- a/src/dedicated_room/citra-room.cpp
-+++ b/src/dedicated_room/citra-room.cpp
-@@ -26,7 +26,7 @@
- #include "common/logging/log.h"
- #include "common/scm_rev.h"
- #include "common/string_util.h"
--#include "core/announce_multiplayer_session.h"
-+#include "network/announce_multiplayer_session.h"
- #include "network/network.h"
- #include "network/network_settings.h"
- #include "network/room.h"
-@@ -342,7 +342,7 @@ int main(int argc, char** argv) {
-             return -1;
-         }
-         std::cout << "Room is open. Close with Q+Enter...\n\n";
--        auto announce_session = std::make_unique<Core::AnnounceMultiplayerSession>();
-+        auto announce_session = std::make_unique<Network::AnnounceMultiplayerSession>();
-         if (announce) {
-             announce_session->Start();
-         }
-diff --git a/src/network/CMakeLists.txt b/src/network/CMakeLists.txt
-index cf920d8bc4e..1a9dfe836f6 100644
---- a/src/network/CMakeLists.txt
-+++ b/src/network/CMakeLists.txt
-@@ -1,4 +1,6 @@
- add_library(network STATIC
-+    announce_multiplayer_session.cpp
-+    announce_multiplayer_session.h
-     network.cpp
-     network.h
-     network_settings.cpp
-diff --git a/src/core/announce_multiplayer_session.cpp b/src/network/announce_multiplayer_session.cpp
-similarity index 99%
-rename from src/core/announce_multiplayer_session.cpp
-rename to src/network/announce_multiplayer_session.cpp
-index 9ae373192a3..56c02a041f7 100644
---- a/src/core/announce_multiplayer_session.cpp
-+++ b/src/network/announce_multiplayer_session.cpp
-@@ -15,7 +15,7 @@
- #include "web_service/announce_room_json.h"
- #endif
- 
--namespace Core {
-+namespace Network {
- 
- // Time between room is announced to web_service
- static constexpr std::chrono::seconds announce_time_interval(15);
-@@ -161,4 +161,4 @@ void AnnounceMultiplayerSession::UpdateCredentials() {
- #endif
- }
- 
--} // namespace Core
-+} // namespace Network
-diff --git a/src/core/announce_multiplayer_session.h b/src/network/announce_multiplayer_session.h
-similarity index 98%
-rename from src/core/announce_multiplayer_session.h
-rename to src/network/announce_multiplayer_session.h
-index 5647972d0d8..97fd1e5b38f 100644
---- a/src/core/announce_multiplayer_session.h
-+++ b/src/network/announce_multiplayer_session.h
-@@ -15,10 +15,8 @@
- #include "common/thread.h"
- 
- namespace Network {
--class Room;
--}
- 
--namespace Core {
-+class Room;
- 
- /**
-  * Instruments AnnounceMultiplayerRoom::Backend.
-@@ -93,4 +91,4 @@ class AnnounceMultiplayerSession : NonCopyable {
-     void AnnounceMultiplayerLoop();
- };
- 
--} // namespace Core
-+} // namespace Network
