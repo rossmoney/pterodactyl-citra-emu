@@ -1,7 +1,7 @@
-From f10ca60ab74ae8be4d60d3a7808b02aef03b26d0 Mon Sep 17 00:00:00 2001
+From 689668c2e9c8d739e93560f7bd2f0093619c8df2 Mon Sep 17 00:00:00 2001
 From: Vitor Kiguchi <vitor-kiguchi@hotmail.com>
 Date: Thu, 20 Aug 2020 16:54:01 -0300
-Subject: [PATCH 2/4] remove dedicated_room dependence on core
+Subject: [PATCH 2/3] remove dedicated_room dependence on core
 
 ---
  src/citra_qt/multiplayer/chat_room.cpp                 | 2 +-
@@ -24,7 +24,7 @@ Subject: [PATCH 2/4] remove dedicated_room dependence on core
  rename src/{core => network}/announce_multiplayer_session.h (98%)
 
 diff --git a/src/citra_qt/multiplayer/chat_room.cpp b/src/citra_qt/multiplayer/chat_room.cpp
-index 440736978..6b303bc1e 100644
+index ffd9a0b68..1e4f2ff07 100644
 --- a/src/citra_qt/multiplayer/chat_room.cpp
 +++ b/src/citra_qt/multiplayer/chat_room.cpp
 @@ -20,7 +20,7 @@
@@ -196,7 +196,7 @@ index 707efd5a4..3607d97af 100644
      bool has_mod_perms = false;
      Network::RoomMember::CallbackHandle<Network::RoomMember::State> state_callback_handle;
 diff --git a/src/core/CMakeLists.txt b/src/core/CMakeLists.txt
-index 6b98a0d28..fdafd62e3 100644
+index 7cd900a9d..26fe48a57 100644
 --- a/src/core/CMakeLists.txt
 +++ b/src/core/CMakeLists.txt
 @@ -1,7 +1,5 @@
@@ -308,5 +308,5 @@ index 5647972d0..97fd1e5b3 100644
 -} // namespace Core
 +} // namespace Network
 -- 
-2.34.1
+2.36.1
 
