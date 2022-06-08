@@ -13,6 +13,8 @@ RUN --mount=type=cache,id=ccache,target=/root/.ccache \
 
 FROM debian:bullseye-slim AS final
 LABEL maintainer="citraemu"
+RUN apt-get update && apt-get install -y ca-certificates && \
+    rm -rf /var/lib/apt/lists/
 # Create app directory
 WORKDIR /usr/src/app
 COPY --from=build /root/citra-canary/build/bin/Release/citra-room /usr/src/app
