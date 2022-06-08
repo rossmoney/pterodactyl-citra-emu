@@ -3,7 +3,7 @@ FROM debian:bullseye AS build
 ENV DEBIAN_FRONTEND=noninteractive
 ARG USE_CCACHE
 RUN apt-get update && apt-get -y full-upgrade && \
-    apt-get install -y build-essential wget git ccache cmake ninja-build
+    apt-get install -y build-essential wget git ccache cmake ninja-build libssl-dev
 
 COPY . /root/build-files
 
