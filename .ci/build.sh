@@ -4,7 +4,7 @@ TOPDIR="$(dirname "$0")"
 
 git config user.name "github-actions"
 git config user.email "github-actions[bot]@users.noreply.github.com"
-git am "$TOPDIR"/../patches/*.patch
+#git am "$TOPDIR"/../patches/*.patch
 
 CFLAGS="-ftree-vectorize -flto"
 if [[ "$(uname -m)" == "aarch64" ]]; then
