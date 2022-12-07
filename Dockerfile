@@ -11,6 +11,7 @@ RUN --mount=type=cache,id=ccache,target=/root/.ccache \
     git clone --depth 1000 --recursive https://github.com/citra-emu/citra-canary.git /root/citra-canary && \
     cd /root/citra-canary && /root/build-files/.ci/build.sh
 
+FROM ubuntu:focal AS final
 # Create app directory
 
 USER container
