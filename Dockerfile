@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.3
-FROM debian:bullseye AS build
+FROM ubuntu:focal AS build
 ENV DEBIAN_FRONTEND=noninteractive
 ARG USE_CCACHE
 RUN apt-get update && apt-get -y full-upgrade && \
@@ -11,8 +11,6 @@ RUN --mount=type=cache,id=ccache,target=/root/.ccache \
     git clone --depth 1000 --recursive https://github.com/citra-emu/citra-canary.git /root/citra-canary && \
     cd /root/citra-canary && /root/build-files/.ci/build.sh
 
-FROM gcr.io/distroless/cc-debian11 AS final
-LABEL maintainer="citraemu"
 # Create app directory
 
 USER container
