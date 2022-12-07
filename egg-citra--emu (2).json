@@ -1,0 +1,92 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2022-12-07T02:49:10+00:00",
+    "name": "Citra-Emu",
+    "author": "tekkifox@gmx.com",
+    "description": "Citra-Emu Nintendo 3DS Emulator",
+    "features": null,
+    "docker_images": {
+        "ghcr.io\/rossmoney\/pterodactyl-citra-emu:master": "ghcr.io\/rossmoney\/pterodactyl-citra-emu:master"
+    },
+    "file_denylist": [],
+    "startup": "\/usr\/src\/app\/citra-room --room-name \\\"{{ROOM_NAME}}\\\" --room-description \\\"{{ROOM_DESC}}\\\" --preferred-game \\\"{{PREF_GAME}}\\\" --preferred-game-id \\\"{{PREF_GAME_ID}}\\\" --port {{SERVER_PORT}} --max_members {{PLAYERS}} --token \\\"{{TOKEN}}\\\" --enable-citra-mods --web-api-url \\\"https:\/\/api.citra-emu.org\/\\\"",
+    "config": {
+        "files": "{}",
+        "startup": "{\r\n    \"done\": \"Room is open\",\r\n    \"userInteraction\": []\r\n}",
+        "logs": "{\r\n    \"custom\": false,\r\n    \"location\": \"logs\/latest.log\"\r\n}",
+        "stop": "exit"
+    },
+    "scripts": {
+        "installation": {
+            "script": null,
+            "container": "alpine:latest",
+            "entrypoint": "ash"
+        }
+    },
+    "variables": [
+        {
+            "name": "Room Name",
+            "description": "",
+            "env_variable": "ROOM_NAME",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:20",
+            "field_type": "text"
+        },
+        {
+            "name": "Room Description",
+            "description": "",
+            "env_variable": "ROOM_DESC",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:100",
+            "field_type": "text"
+        },
+        {
+            "name": "Preferred Game",
+            "description": "",
+            "env_variable": "PREF_GAME",
+            "default_value": "(any)",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:20",
+            "field_type": "text"
+        },
+        {
+            "name": "Preferred Game ID",
+            "description": "",
+            "env_variable": "PREF_GAME_ID",
+            "default_value": "(any)",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:20",
+            "field_type": "text"
+        },
+        {
+            "name": "Number of Players",
+            "description": "",
+            "env_variable": "PLAYERS",
+            "default_value": "4",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|integer",
+            "field_type": "text"
+        },
+        {
+            "name": "Token",
+            "description": "",
+            "env_variable": "TOKEN",
+            "default_value": "",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:100",
+            "field_type": "text"
+        }
+    ]
+}
