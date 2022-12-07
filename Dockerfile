@@ -18,9 +18,12 @@ USER container
 ENV  USER container
 ENV HOME /home/container
 
+WORKDIR /usr/src/app
+
+COPY --from=build /root/citra-canary/build/bin/Release/citra-room /usr/src/app
+
 WORKDIR /home/container
 
-COPY --from=build /root/citra-canary/build/bin/Release/citra-room /home/container
 COPY ./entrypoint.sh /entrypoint.sh
 
 CMD ["/bin/bash", "/entrypoint.sh"]
