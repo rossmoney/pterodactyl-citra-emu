@@ -6,7 +6,7 @@
     },
     "exported_at": "2022-12-07T00:33:11+00:00",
     "name": "Citra-Emu",
-    "author": "unknown@unknown.com",
+    "author": "tekkifox@gmx.com",
     "description": "Citra-Emu Nintendo 3DS Emulator",
     "features": null,
     "docker_images": {
@@ -22,7 +22,7 @@
     },
     "scripts": {
         "installation": {
-            "script": null,
+            "script": "#!\/bin\/ash\r\n\r\ncd \/mnt\/server\r\n\r\napk --update add git\r\n\r\ngit clone https:\/\/github.com\/rossmoney\/pterodactyl-citra-emu.git .\/temp\r\n\r\ncp .\/temp\/start.sh \/mnt\/server\/\r\n\r\nchmod +x \/mnt\/server\/start.sh\r\n\r\nrm -rf .\/temp",
             "container": "alpine:latest",
             "entrypoint": "ash"
         }
