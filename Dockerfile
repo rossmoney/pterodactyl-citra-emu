@@ -14,7 +14,14 @@ RUN --mount=type=cache,id=ccache,target=/root/.ccache \
 FROM gcr.io/distroless/cc-debian11 AS final
 LABEL maintainer="citraemu"
 # Create app directory
-WORKDIR /usr/src/app
-COPY --from=build /root/citra-canary/build/bin/Release/citra-room /usr/src/app
 
-ENTRYPOINT [ "/usr/src/app/citra-room" ]
+USER container
+ENV  USER container
+ENV HOME /home/container
+
+WORKDIR /home/container
+
+COPY --from=build /root/citra-canary/build/bin/Release/citra-room /home/container
+COPY ./entrypoint.sh /entrypoint.sh
+
+CMD ["/bin/bash", "/entrypoint.sh"]
